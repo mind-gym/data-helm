@@ -3,6 +3,16 @@ entries:
   dashboard:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2022-03-14T11:19:30.801008848Z"
+    description: A Helm chart for Data Dashboards.
+    digest: ae0559469c6731d349f42d9acee2f7e0ae0911c7de2bb8b63545c04c83cfe4c4
+    name: dashboard
+    type: application
+    urls:
+    - https://github.com/mind-gym/data-helm/releases/download/dashboard-0.0.3/dashboard-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2022-03-14T11:13:42.276521367Z"
     description: A Helm chart for Data Dashboards.
     digest: 954a529d6f0255612299cf236b6e35d54d87156d7ccaaa1b21c19aca77f3528b
