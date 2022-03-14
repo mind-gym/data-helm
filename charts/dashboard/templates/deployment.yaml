@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dashboard.fullname" . }}
+  labels:
+    {{- include "dashboard.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "dashboard.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "dashboard.selectorLabels" . | nindent 8 }}
+    spec:
+      initContainers:
+        - name: {{ .Chart.Name }}-init
+          image: "886288514290.dkr.ecr.eu-west-1.amazonaws.com/{{ .Values.initContainer.image.repository }}:{{ .Values.initContainer.image.tag | default .Chart.AppVersion }}"
+          command: 
+          {{- toYaml .Values.initContainer.command | nindent 12 }}
+          args:
+          {{- toYaml .Values.initContainer.args | nindent 12 }}
+          volumeMounts:
+          - name: data
+            mountPath: "{{ .Values.initContainer.volume.mountPath }}"    
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "886288514290.dkr.ecr.eu-west-1.amazonaws.com/{{ .Values.mainContainer.image.repository }}:{{ .Values.mainContainer.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.mainContainer.image.pullPolicy }}
+          command:
+          {{- toYaml .Values.mainContainer.command | nindent 12 }}
+          volumeMounts:
+          - name: data
+            mountPath: "{{ .Values.mainContainer.volume.mountPath }}"             
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http             
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+      - name: data
+        emptyDir: {}     
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

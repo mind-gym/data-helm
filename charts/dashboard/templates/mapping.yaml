@@ -1,0 +1,11 @@
+# Mapping for PCO.
+apiVersion: getambassador.io/v2
+kind: Mapping
+metadata:
+  name: {{ include "dashboard.fullname" . }}
+spec:
+  hostname: "{{ .Values.mapping.hostname }}"
+  prefix: {{ .Values.mapping.prefix }}
+  service: {{ include "dashboard.fullname" . }}:80
+  allow_upgrade:
+  - websocket  

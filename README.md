@@ -19,4 +19,4 @@ To install the dashboard chart:
 
 To uninstall the chart:
 
-    helm delete `product`-`actual-name-of-dashboard`
+  helm delete `product`-`actual-name-of-dashboard`
