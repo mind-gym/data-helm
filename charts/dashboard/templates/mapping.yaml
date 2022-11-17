@@ -4,7 +4,7 @@ kind: Mapping
 metadata:
   name: {{ include "dashboard.fullname" . }}
 spec:
-  hostname: "{{ .Values.mapping.hostname }}"
+  host: "{{ .Values.mapping.hostname }}"
   prefix: {{ .Values.mapping.prefix }}
   service: {{ include "dashboard.fullname" . }}:80
   allow_upgrade:
