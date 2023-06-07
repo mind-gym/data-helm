@@ -22,6 +22,7 @@ spec:
     spec:
       initContainers:
         - name: {{ .Chart.Name }}-init
+          serviceAccountName: {{ include "dashboard.fullname" . }}
           image: "886288514290.dkr.ecr.eu-west-2.amazonaws.com/{{ .Values.initContainer.image.repository }}:{{ .Values.initContainer.image.tag | default .Chart.AppVersion }}"
           command: 
           {{- toYaml .Values.initContainer.command | nindent 12 }}
@@ -32,6 +33,7 @@ spec:
             mountPath: "{{ .Values.initContainer.volume.mountPath }}"    
       containers:
         - name: {{ .Chart.Name }}
+          serviceAccountName: {{ include "dashboard.fullname" . }}
           image: "886288514290.dkr.ecr.eu-west-2.amazonaws.com/{{ .Values.mainContainer.image.repository }}:{{ .Values.mainContainer.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.mainContainer.image.pullPolicy }}
           command:
